@@ -130,7 +130,13 @@ def IsNextCardHigher(LastCard, NextCard):
 
 def GetPlayerName():
   print()
-  PlayerName = input('Please enter your name: ')
+  NameMan = False
+  while not NameMan:
+    PlayerName = input('Please enter your name: ')
+    if PlayerName == "":
+      print("You have to enter a name!")
+    else:
+      NameMan = True
   print()
   return PlayerName
 
@@ -213,7 +219,11 @@ def PlayGame(Deck, RecentScores):
       GameOver = True
   if GameOver:
     DisplayEndOfGameMessage(NoOfCardsTurnedOver - 2)
-    UpdateRecentScores(RecentScores, NoOfCardsTurnedOver - 2)
+    Scoreboard = input("Would you like to add your score to the high score table? (Y/N): ")
+    Scoreboard = Scoreboard.lower()
+    if Scoreboard == "y":
+      UpdateRecentScores(RecentScores, NoOfCardsTurnedOver - 2)
+      
   else:
     DisplayEndOfGameMessage(51)
     UpdateRecentScores(RecentScores, 51)
