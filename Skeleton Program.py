@@ -4,8 +4,7 @@
 # developed in the Python 3.2 programming environment
 # version 2 edited 06/03/2014
 
-import random
-import datetime
+import random, datetime
 
 NO_OF_RECENT_SCORES = 3
 
@@ -18,11 +17,12 @@ class TRecentScore():
   def __init__(self):
     self.Name = ''
     self.Score = 0
+    self.Date = None
 
 Deck = [None]
 RecentScores = [None]
 Choice = ''
-
+ 
 def GetRank(RankNo):
   Rank = ''
   if RankNo == 1:
@@ -73,6 +73,7 @@ def DisplayMenu():
   print('2. Play game (without shuffle)')
   print('3. Display recent scores')
   print('4. Reset recent scores')
+  print('5. Options')
   print()
   print('Select an option from the menu (or enter q to quit): ', end='')
 
@@ -82,6 +83,30 @@ def GetMenuChoice():
     Choice = "q"
   print()
   return Choice
+
+def DisplayOptions():
+  print("Options menu")
+  print("1. Set Ace to be HIGH or LOW")
+  print()
+
+def GetOptionChoice():
+  OptionChoice = input("Select an option from the menu (or enter Q to quit):  ")
+  OptionChoice = OptionChoice.lower()
+  return OptionChoice
+
+def SetOptions(OptionChoice):
+  if OptionChoice == "q" or "quit":
+    pass
+  elif OptionChoice == "1":
+    SetAceHighOrLow()
+
+def SetAceHighOrLow():
+  AceNow = 1
+  AceChoice = input("Do you want Ace to be (h)igh or (l)ow: ")
+  if AceChoice == "h":
+    AceNow = 14
+  elif AceChoice == "l":
+    AceNow = 1
 
 def LoadDeck(Deck):
   CurrentFile = open('deck.txt', 'r')
@@ -176,9 +201,9 @@ def DisplayRecentScores(RecentScores):
   print()
   print('Recent Scores: ')
   print()
-  print("{0}{1:>14}".format("Name","Score"))
+  print("{0}{1:>14}{2:>14}".format("Name","Score","Date"))
   for Count in range(1, NO_OF_RECENT_SCORES + 1):
-    print("{0}{1:>{2}}".format(RecentScores[Count].Name, RecentScores[Count].Score,18-(len(RecentScores[Count].Name))))
+    print("{0}{1:>{2}}{3:>14}".format(RecentScores[Count].Name, RecentScores[Count].Score,18-(len(RecentScores[Count].Name)), RecentScores[Count].Date))
   print()
   print('Press the Enter key to return to the main menu')
   input()
@@ -200,6 +225,8 @@ def UpdateRecentScores(RecentScores, Score):
     Count = NO_OF_RECENT_SCORES
   RecentScores[Count].Name = PlayerName
   RecentScores[Count].Score = Score
+  DateNow = datetime.date.today()
+  RecentScores[Count].Date = DateNow.strftime("%d/%m/%y")
 
 def PlayGame(Deck, RecentScores):
   LastCard = TCard()
@@ -253,3 +280,6 @@ if __name__ == '__main__':
       DisplayRecentScores(RecentScores)
     elif Choice == '4':
       ResetRecentScores(RecentScores)
+    elif Choice == "5":
+      DisplayOptions()
+      OptionChoice = GetOptionChoice()

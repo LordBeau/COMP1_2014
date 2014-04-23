@@ -1,0 +1,31 @@
+Pseudo-code:
+
+FUNCTION DisplayOptions
+	OUTPUT "Option menu"
+	OUTPUT "1. Set Ace to be HIGH or LOW"
+	OUTPUT ""
+END FUNCTION
+
+
+FUNCTION GetOptionChoice
+	OUTPUT "Select an option from the menu (or enter q to quit): "
+	INPUT OptionChoice
+	RETURN OptionChoice
+END FUNCTION
+
+FUNCTION SetOptions(OptionChoice)
+	IF OptionChoice = 1 THEN
+		SetAceHighOrLow
+	END IF
+END FUNCTION
+
+FUNCTION SetAceHighOrLow
+	OUTPUT "Do you want the Ace to be (h)igh or (l)ow: "
+	INPUT AceChoice
+	IF AceChoice = "h" THEN
+		Ace = X
+	IF AceChoice = "l" THEN
+		Ace = Y
+	END IF
+END FUNCTION
+	
