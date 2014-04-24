@@ -22,6 +22,7 @@ class TRecentScore():
 Deck = [None]
 RecentScores = [None]
 Choice = ''
+AceHigh = None
  
 def GetRank(RankNo):
   Rank = ''
@@ -51,6 +52,7 @@ def GetRank(RankNo):
     Rank = 'Queen'
   elif RankNo == 13:
     Rank = 'King'
+    
   return Rank
 
 def GetSuit(SuitNo):
@@ -86,27 +88,34 @@ def GetMenuChoice():
 
 def DisplayOptions():
   print("Options menu")
+  print()
   print("1. Set Ace to be HIGH or LOW")
   print()
 
 def GetOptionChoice():
-  OptionChoice = input("Select an option from the menu (or enter Q to quit):  ")
+  OptionOne = False
+  while not OptionOne:
+    OptionChoice = input("Select an option from the menu (or enter Q to quit):  ")
+    if OptionChoice == "1" or "Q":
+      OptionOne = True
+    else:
+      OptionOne = False
   OptionChoice = OptionChoice.lower()
   return OptionChoice
 
 def SetOptions(OptionChoice):
-  if OptionChoice == "q" or "quit":
-    pass
-  elif OptionChoice == "1":
-    SetAceHighOrLow()
+  if OptionChoice == "1":
+    AceHigh = SetAceHighOrLow()
 
 def SetAceHighOrLow():
-  AceNow = 1
+  AceHigh = False
   AceChoice = input("Do you want Ace to be (h)igh or (l)ow: ")
   if AceChoice == "h":
-    AceNow = 14
+    AceHigh = True
+    print("Ace has been set to HIGH")
   elif AceChoice == "l":
-    AceNow = 1
+    AceHigh = False
+  return AceHigh
 
 def LoadDeck(Deck):
   CurrentFile = open('deck.txt', 'r')
@@ -148,10 +157,20 @@ def GetCard(ThisCard, Deck, NoOfCardsTurnedOver):
   Deck[52 - NoOfCardsTurnedOver].Suit = 0
   Deck[52 - NoOfCardsTurnedOver].Rank = 0
 
-def IsNextCardHigher(LastCard, NextCard):
+def IsNextCardHigher(LastCard, NextCard, AceHigh):
   Higher = False
-  if NextCard.Rank > LastCard.Rank:
-    Higher = True
+  DoneHigher = False
+  while DoneHigher == False:
+    if AceHigh:
+      if NextCard.Rank == 1:
+        Higher = True
+        DoneHigher = True
+      if LastCard.Rank == 1:
+        Higher = False
+        DoneHigher = True
+    if NextCard.Rank > LastCard.Rank:
+      Higher = True
+      DoneHigher = True
   return Higher
 
 def GetPlayerName():
@@ -242,7 +261,7 @@ def PlayGame(Deck, RecentScores):
       Choice = GetChoiceFromUser()
     DisplayCard(NextCard)
     NoOfCardsTurnedOver = NoOfCardsTurnedOver + 1
-    Higher = IsNextCardHigher(LastCard, NextCard)
+    Higher = IsNextCardHigher(LastCard, NextCard, AceHigh)
     if (Higher and Choice == 'y') or (not Higher and Choice == 'n'):
       DisplayCorrectGuessMessage(NoOfCardsTurnedOver - 1)
       LastCard.Rank = NextCard.Rank
@@ -283,3 +302,4 @@ if __name__ == '__main__':
     elif Choice == "5":
       DisplayOptions()
       OptionChoice = GetOptionChoice()
+      SetOptions(OptionChoice)
