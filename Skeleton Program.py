@@ -4,7 +4,7 @@
 # developed in the Python 3.2 programming environment
 # version 2 edited 06/03/2014
 
-import random, datetime
+import random, datetime, pickle
 
 NO_OF_RECENT_SCORES = 3
 
@@ -23,7 +23,7 @@ Deck = [None]
 RecentScores = [None]
 Choice = ''
 AceHigh = None
- 
+
 def GetRank(RankNo):
   Rank = ''
   if RankNo == 1:
@@ -76,6 +76,7 @@ def DisplayMenu():
   print('3. Display recent scores')
   print('4. Reset recent scores')
   print('5. Options')
+  print('6. Save high scores')
   print()
   print('Select an option from the menu (or enter q to quit): ', end='')
 
@@ -85,6 +86,10 @@ def GetMenuChoice():
     Choice = "q"
   print()
   return Choice
+
+def SaveScores(RecentScores):
+  with open("save_scores.dat", mode="wb") as my_file:
+    pickle.dump(RecentScores, my_file)
 
 def DisplayOptions():
   print("Options menu")
@@ -159,18 +164,18 @@ def GetCard(ThisCard, Deck, NoOfCardsTurnedOver):
 
 def IsNextCardHigher(LastCard, NextCard, AceHigh):
   Higher = False
-  DoneHigher = False
-  while DoneHigher == False:
-    if AceHigh:
-      if NextCard.Rank == 1:
-        Higher = True
-        DoneHigher = True
-      if LastCard.Rank == 1:
-        Higher = False
-        DoneHigher = True
+  if AceHigh == False:
     if NextCard.Rank > LastCard.Rank:
+      Higher =  True
+
+  elif AceHigh == True:
+    if NextCard.Rank == 1 and LastCard.Rank != 1:
       Higher = True
-      DoneHigher = True
+    elif LastCard.Rank == 1:
+      
+      Higher = False
+    elif NextCard.Rank > LastCard.Rank:
+      Higher = True
   return Higher
 
 def GetPlayerName():
@@ -303,3 +308,5 @@ if __name__ == '__main__':
       DisplayOptions()
       OptionChoice = GetOptionChoice()
       SetOptions(OptionChoice)
+    elif Choice == "6":
+      SaveScores(RecentScores)
