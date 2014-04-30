@@ -4,7 +4,7 @@
 # developed in the Python 3.2 programming environment
 # version 2 edited 06/03/2014
 
-import random, datetime, pickle
+import random, datetime
 
 NO_OF_RECENT_SCORES = 3
 
@@ -22,7 +22,7 @@ class TRecentScore():
 Deck = [None]
 RecentScores = [None]
 Choice = ''
-AceHigh = None
+AceHigh = False
 
 def GetRank(RankNo):
   Rank = ''
@@ -87,9 +87,27 @@ def GetMenuChoice():
   print()
   return Choice
 
+def BubbleSortScores(RecentScores):
+  Swapped = True
+  while Swapped:
+    Swapped = False
+    for count in range(1, NO_OF_RECENT_SCORES):
+      if RecentScores[count].Score < RecentScores[count+1].Score:
+        temp = RecentScores[count]
+        RecentScores[count] = RecentScores[count+1]
+        RecentScores[count+1] = temp
+        Swapped = True
+        
+
 def SaveScores(RecentScores):
-  with open("save_scores.dat", mode="wb") as my_file:
-    pickle.dump(RecentScores, my_file)
+  with open("save_scores.txt",mode="w",encoding="utf-8") as my_file:
+    for each in range(1,NO_OF_RECENT_SCORES):
+      my_file.write(RecentScores[each].Name)
+      RecentScores[each].Score = str(RecentScores[each].Score)
+      my_file.write(RecentScores[each].Score)
+
+def LoadScores():
+  pass
 
 def DisplayOptions():
   print("Options menu")
@@ -114,13 +132,17 @@ def SetOptions(OptionChoice):
 
 def SetAceHighOrLow():
   AceHigh = False
-  AceChoice = input("Do you want Ace to be (h)igh or (l)ow: ")
-  if AceChoice == "h":
-    AceHigh = True
-    print("Ace has been set to HIGH")
-  elif AceChoice == "l":
-    AceHigh = False
-  return AceHigh
+  HighLow = False
+  while not HighLow:
+    AceChoice = input("Do you want Ace to be (h)igh or (l)ow: ")
+    if AceChoice == "h":
+      AceHigh = True
+      HighLow = True
+      print("Ace has been set to HIGH")
+    elif AceChoice == "l":
+      AceHigh = False
+      HighLow = True
+    return AceHigh
 
 def LoadDeck(Deck):
   CurrentFile = open('deck.txt', 'r')
@@ -164,6 +186,7 @@ def GetCard(ThisCard, Deck, NoOfCardsTurnedOver):
 
 def IsNextCardHigher(LastCard, NextCard, AceHigh):
   Higher = False
+      
   if AceHigh == False:
     if NextCard.Rank > LastCard.Rank:
       Higher =  True
@@ -172,7 +195,6 @@ def IsNextCardHigher(LastCard, NextCard, AceHigh):
     if NextCard.Rank == 1 and LastCard.Rank != 1:
       Higher = True
     elif LastCard.Rank == 1:
-      
       Higher = False
     elif NextCard.Rank > LastCard.Rank:
       Higher = True
@@ -301,6 +323,7 @@ if __name__ == '__main__':
       LoadDeck(Deck)
       PlayGame(Deck, RecentScores)
     elif Choice == '3':
+      BubbleSortScores(RecentScores)
       DisplayRecentScores(RecentScores)
     elif Choice == '4':
       ResetRecentScores(RecentScores)
