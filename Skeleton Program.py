@@ -103,14 +103,15 @@ def SaveScores(RecentScores):
   with open("save_scores.txt",mode="w",encoding="utf-8") as my_file:
     for each in range(1,NO_OF_RECENT_SCORES+1):
       my_file.write(RecentScores[each].Name+"\n")
-      RecentScores[each].Score = str(RecentScores[each].Score)
-      my_file.write(RecentScores[each].Score+"\n")
-      RecentScores[each].Date = str(RecentScores[each].Date)
-      my_file.write(RecentScores[each].Date+"\n")
+      my_file.write(str(RecentScores[each].Score)+"\n")
+      my_file.write(str(RecentScores[each].Date)+"\n")
 
 def LoadScores():
   with open("save_scores.txt",mode="r",encoding="utf-8") as my_file:
-    pass
+    for line in (my_file/3):
+      for count in range(3):
+        RecentScores[1].count+1
+    
 
 def DisplayOptions():
   print("Options menu")
