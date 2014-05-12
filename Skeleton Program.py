@@ -108,10 +108,10 @@ def SaveScores(RecentScores):
 
 def LoadScores():
   with open("save_scores.txt",mode="r",encoding="utf-8") as my_file:
-    for line in (my_file/3):
-      for count in range(3):
-        RecentScores[1].count+1
-    
+    for line in range(1, NO_OF_RECENT_SCORES+1):
+      RecentScores[line].Name = my_file.readline()
+      RecentScores[line].Score = my_file.readline()
+      RecentScores[line].Date = my_file.readline()
 
 def DisplayOptions():
   print("Options menu")
@@ -317,6 +317,7 @@ if __name__ == '__main__':
     RecentScores.append(TRecentScore())
   Choice = ''
   while Choice != 'q':
+    LoadScores()
     DisplayMenu()
     Choice = GetMenuChoice()
     if Choice == '1':
