@@ -6,7 +6,7 @@
 
 import random, datetime
 
-NO_OF_RECENT_SCORES = 3
+NO_OF_RECENT_SCORES = 10
 
 class TCard():
   def __init__(self):
@@ -107,16 +107,22 @@ def SaveScores(RecentScores):
       my_file.write(str(RecentScores[each].Date)+"\n")
 
 def LoadScores():
-  with open("save_scores.txt",mode="r",encoding="utf-8") as my_file:
-    for line in range(1, NO_OF_RECENT_SCORES+1):
-      RecentScores[line].Name = my_file.readline()
-      RecentScores[line].Score = my_file.readline()
-      RecentScores[line].Date = my_file.readline()
+  for count in range(2):
+    try:
+      with open("save_scores.txt",mode="r",encoding="utf-8") as my_file:
+        for line in range(1, NO_OF_RECENT_SCORES+1):
+          RecentScores[line].Name = my_file.readline()
+          RecentScores[line].Score = my_file.readline()
+          RecentScores[line].Date = my_file.readline()
+    except IOError:
+      SaveScores(RecentScores)
+    
 
 def DisplayOptions():
   print("Options menu")
   print()
   print("1. Set Ace to be HIGH or LOW")
+  print("2. Card of same score ends game.")
   print()
 
 def GetOptionChoice():
@@ -133,6 +139,8 @@ def GetOptionChoice():
 def SetOptions(OptionChoice):
   if OptionChoice == "1":
     AceHigh = SetAceHighOrLow()
+  elif OptionChoice == "2":
+    SetSameScore()
 
 def SetAceHighOrLow():
   AceHigh = False
@@ -147,6 +155,22 @@ def SetAceHighOrLow():
       AceHigh = False
       HighLow = True
     return AceHigh
+
+def SetSameScore():
+  SameCard = False
+  valid = False
+  while not valid:
+    SameCardChoice = input("If the next card is the same as the last, end game? (y or n): ")
+    SameCardChoice = SameCardChoice.lower()
+    if SameCardChoice == "y":
+      SameCard = True
+      valid = True
+    elif SameCardChoice == "n":
+      SameCard = False
+      valid = True
+    else:
+      print("Please enter either \"Y\" or \"N\" ")
+      valid = False
 
 def LoadDeck(Deck):
   CurrentFile = open('deck.txt', 'r')
