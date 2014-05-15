@@ -6,7 +6,7 @@
 
 import random, datetime
 
-NO_OF_RECENT_SCORES = 10
+NO_OF_RECENT_SCORES = 3
 
 class TCard():
   def __init__(self):
@@ -105,7 +105,7 @@ def SaveScores(RecentScores):
       my_file.write(RecentScores[each].Name+"\n")
       my_file.write(str(RecentScores[each].Score)+"\n")
       my_file.write(str(RecentScores[each].Date)+"\n")
-
+      
 def LoadScores():
   for count in range(2):
     try:
